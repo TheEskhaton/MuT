@@ -6,11 +6,9 @@ var MuT = (function(){
 	return{
 		parse : function(template, data){
 			var pattern = /{{\w+}}/g,
-				matches = template.match(pattern),
-				clearMatches = [];
+				matches = template.match(pattern)
 			for (var i = 0; i < matches.length; i++) {
-				clearMatches.push(matches[i].replace('{{','').replace('}}',''));
-				template = template.replace(matches[i],getNotEmpty(data[clearMatches[i]],''));
+				template = template.replace(matches[i],getNotEmpty(data[matches[i].replace('{{','').replace('}}','')],''));
 			};
 			return template;
 		}
@@ -20,7 +18,9 @@ var MuT = (function(){
 
 var Product = {Name: 'Product', Code : '#22123', Price: 45.5, IsAvailable : true };
 
-console.log(MuT.parse('<div style="display: none;">'+
+var start = Date.now();
+for (var i = 0; i < 700000; i++) {
+	MuT.parse('<div style="display: none;">'+
   '<%-- Templates --%>' +
   '<%-- Template for stuff list --%>'+
   '<div id="divStuffListTemplate">'+
@@ -45,4 +45,10 @@ console.log(MuT.parse('<div style="display: none;">'+
     '</table>'+
    '</div>'+
   '</div>'+
-'</div>',Product));
+'</div>',Product);
+};
+
+var end = Date.now();
+var elapsed = (end - start)+'ms';
+
+console.log(elapsed);
