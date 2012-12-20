@@ -13,8 +13,16 @@ var MuT = (function(){
 			}
 			return template;
 		},
-
 		parse: function(template, data){
+			if(typeof Object.keys !== 'undefined'){
+				return keysParse(template, data);
+			}
+			else{
+				return regexParse(template, data);
+			}
+		},
+		/* browsers that have Object.keys */
+		keysParse: function(template, data){
 			var keys = Object.keys(data)
 			for(key in keys){
 				template = template.replace(key,getNotEmpty(data['{{'+key+'}}','']),'');
